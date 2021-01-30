@@ -21,7 +21,7 @@ class MastList():
                         row[1], row[2], row[3], row[4]                    # property address
                     ),
                     row[5],                                               # unit name
-                    row[6],                                               # tenant name
+                    self._normalize(row[6]),                              # tenant name
                     dt.strptime(row[7], '%d %b %Y').strftime("%d/%m/%Y"), # lease start
                     dt.strptime(row[8], '%d %b %Y').strftime("%d/%m/%Y"), # lease end
                     int(row[9]),                                          # lease years
@@ -29,18 +29,46 @@ class MastList():
                 for row in reader]
 
 
-    def get_sorted(self, by='current_rent', reverse=True, num=None):
+    def _normalize(self, name):
+        if 'Ever' in name and '3G' not in name:
+            return 'Everything Everywhere Ltd.'
+        elif 'Ever' in name and '3G' in name:
+            return 'Everything Everywhere & Hutchinson 3G UK Ltd.'
+        elif 'Corn' in name:
+            return 'Cornerstone Telecommunications Infrastructure'
+        elif 'Arq' in name:
+            return 'Arqiva Ltd.'
+        elif 'Voda' in name:
+            return 'Vodafone Ltd.'
+        elif 'O2' in name:
+            return 'O2 (UK) Ltd.'
+        else:
+            return name
+        
+
+    def get_sorted(self, by='current_rent', reverse=False, num=None):
         data_sorted = sorted(self.masts, key=attrgetter(by), reverse=reverse)
         if num: return data_sorted[:num]
         else: return data_sorted
 
 
     def get_total_rent_subset_by_lease_years(self, lease_years=25):
+        total_rent = 0
         subset = [
             mast for mast in self.masts if mast.lease_years == lease_years
         ]
-        total_rent = sum(mast.current_rent for mast in subset)
+        if subset: total_rent = sum(mast.current_rent for mast in subset)
         return subset, total_rent
+
+
+    def count_masts_by_tenant(self):
+        counts = {}
+        for mast in self.masts:
+            if mast.tenant_name in counts:
+                counts[mast.tenant_name] += 1
+            else:
+                counts[mast.tenant_name] = 1
+        return counts
 
 
     def get_rentals_by_lease_start(self, 
