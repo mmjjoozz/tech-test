@@ -1,6 +1,6 @@
 import csv
 from mast import Mast
-
+from operator import attrgetter
 
 class MastList():
     def __init__(self, path):
@@ -20,7 +20,14 @@ class MastList():
                     l[7],
                     l[8],
                     l[9],
-                    l[10]) for l in reader]
+                    float(l[10])) for l in reader]
+
+    def get_sorted(self, by='current_rent', reverse=True, num=None):
+        s = sorted(self.masts, key=attrgetter(by), reverse=reverse)
+        if num:
+            return s[:num]
+        else:
+            return s
 
 
 
