@@ -2,11 +2,11 @@ import csv
 from mast import Mast
 from operator import attrgetter
 from datetime import datetime as dt
+import pprint
 
+pp = pprint.PrettyPrinter(indent=1, sort_dicts=False)
 
-class MastList():
-
-
+class MastUtil():
     def __init__(self, path):
         self.masts = self._parse(path)
 
@@ -46,36 +46,42 @@ class MastList():
             return name
         
 
-    def get_sorted(self, by='current_rent', reverse=False, num=None):
+    def print_sorted(self, by='current_rent', reverse=False, num=5):
         data_sorted = sorted(self.masts, key=attrgetter(by), reverse=reverse)
-        if num: return data_sorted[:num]
-        else: return data_sorted
+        if num:
+            data_sorted = data_sorted[:num]
+
+        for data_point in data_sorted: pp.pprint(data_point.__dict__)
 
 
-    def get_total_rent_subset_by_lease_years(self, lease_years=25):
+    def print_total_rent_subset_by_lease_years(self, lease_years=25):
         total_rent = 0
         subset = [
             mast for mast in self.masts if mast.lease_years == lease_years
         ]
         if subset: total_rent = sum(mast.current_rent for mast in subset)
-        return subset, total_rent
+
+        for data_point in subset: pp.pprint(data_point.__dict__)
+        print("Total Rent: ", total_rent)
 
 
-    def count_masts_by_tenant(self):
+    def print_masts_by_tenant(self):
         counts = {}
         for mast in self.masts:
             if mast.tenant_name in counts:
                 counts[mast.tenant_name] += 1
             else:
                 counts[mast.tenant_name] = 1
-        return counts
+        pp.pprint(counts)
 
 
-    def get_rentals_by_lease_start(self, 
+    def print_rentals_by_lease_start(self, 
                                   date_min=dt(1999,6,1), 
                                   date_max=dt(2007,8,31)):
-        return [
+        rentals = [
              mast for mast in self.masts if
              dt.strptime(mast.lease_start, '%d/%m/%Y') >= date_min and 
              dt.strptime(mast.lease_start, '%d/%m/%Y') <= date_max
             ]
+            
+        for rental in rentals: pp.pprint(rental.__dict__)
