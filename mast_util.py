@@ -72,6 +72,7 @@ class MastUtil():
                 counts[mast.tenant_name] += 1
             else:
                 counts[mast.tenant_name] = 1
+                
         pp.pprint(counts)
 
 
@@ -83,5 +84,5 @@ class MastUtil():
              dt.strptime(mast.lease_start, '%d/%m/%Y') >= date_min and 
              dt.strptime(mast.lease_start, '%d/%m/%Y') <= date_max
             ]
-            
+
         for rental in rentals: pp.pprint(rental.__dict__)
