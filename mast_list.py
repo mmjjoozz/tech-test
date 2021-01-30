@@ -29,8 +29,10 @@ class MastList():
         else:
             return s
 
-    def get_by_lease_years(self, lease_years=25):
-        return [mast for mast in self.masts if mast.lease_years == lease_years]
-
+    def get_total_rent_subset_by_lease_years(self, lease_years):
+        subset = [mast for mast in self.masts if mast.lease_years == lease_years]
+        total_rent = sum(mast.current_rent for mast in subset)
+        return subset, total_rent
+            
 
 
