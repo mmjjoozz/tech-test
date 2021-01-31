@@ -1,13 +1,13 @@
 # tech-test
 
-##installation
+## installation
 ```
 python setup.py install
 ```
 To avoid any package drama in unit tests.
 No requirements - all done with Python's (pretty great) standard library.
 
-##usage
+## usage
 ```
 run.py [option]
 ```
@@ -22,7 +22,7 @@ run.py --task2 --task1
 Will execute task2 and task1 in that order.
 If no command line arguments supplied, all tasks will be executed.
 
-##testing
+## testing
 cd into the test directory and execute
 ```
 python -m unittest test_mastutil.py
