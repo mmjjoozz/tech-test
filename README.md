@@ -6,7 +6,12 @@ Python 3 required (I've used 3.8.6)
 python setup.py install
 ```
 To avoid any package drama in unit tests.
-No requirements - all done with Python's (pretty great) standard library.
+No requirements* - all done with Python's (pretty great) standard library.
+
+*In some rare edge cases e.g. where Python was compiled manually Setuptools is not included by default, meaning you may have to run 
+```
+pip install setuptools
+```
 
 ## usage
 ```
