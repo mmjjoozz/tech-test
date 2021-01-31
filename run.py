@@ -1,5 +1,5 @@
 import argparse
-from mast_util import MastUtil
+from mast.mast_util import MastUtil
 
 
 argparser = argparse.ArgumentParser()
@@ -33,6 +33,8 @@ cmd_dict = {
     'task3': mast_util.print_masts_by_tenant,
     'task4': mast_util.print_rentals_by_lease_start
 }
+
+# if no args provided, run all tasks defined in cmd_dict
 if not cmd: cmd = cmd_dict.keys()
 for arg in cmd:
     print("\n===== {} =====".format(arg))

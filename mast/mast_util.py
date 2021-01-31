@@ -1,5 +1,5 @@
 import csv
-from mast import Mast
+from .mast import Mast
 from operator import attrgetter
 from datetime import datetime as dt
 import pprint
@@ -15,7 +15,8 @@ class MastUtil():
         with open(path, 'r') as data:
             reader = csv.reader(data)
             next(reader, None)
-            return [Mast(
+            return [
+                Mast(
                     row[0],                                               # property name
                     '{} {} {} {}'.format(
                         row[1], row[2], row[3], row[4]                    # property address
@@ -25,15 +26,17 @@ class MastUtil():
                     dt.strptime(row[7], '%d %b %Y').strftime("%d/%m/%Y"), # lease start
                     dt.strptime(row[8], '%d %b %Y').strftime("%d/%m/%Y"), # lease end
                     int(row[9]),                                          # lease years
-                    float(row[10]))                                       # current rent
-                for row in reader]
+                    float(row[10])                                        # current rent
+                    )                                       
+                for row in reader
+                ]
 
 
     def _normalize(self, name):
-        if 'Ever' in name and '3G' not in name:
-            return 'Everything Everywhere Ltd.'
-        elif 'Ever' in name and '3G' in name:
+        if 'Ever' in name and '3G' in name:
             return 'Everything Everywhere & Hutchinson 3G UK Ltd.'
+        elif 'Ever' in name:
+            return 'Everything Everywhere Ltd.'
         elif 'Corn' in name:
             return 'Cornerstone Telecommunications Infrastructure'
         elif 'Arq' in name:
@@ -48,10 +51,10 @@ class MastUtil():
 
     def print_sorted(self, by='current_rent', reverse=False, num=5):
         data_sorted = sorted(self.masts, key=attrgetter(by), reverse=reverse)
-        if num:
-            data_sorted = data_sorted[:num]
+        if num: data_sorted = data_sorted[:num]
 
         for data_point in data_sorted: pp.pprint(data_point.__dict__)
+        return data_sorted
 
 
     def print_total_rent_subset_by_lease_years(self, lease_years=25):
@@ -63,6 +66,7 @@ class MastUtil():
 
         for data_point in subset: pp.pprint(data_point.__dict__)
         print("Total Rent: ", total_rent)
+        return subset, total_rent
 
 
     def print_masts_by_tenant(self):
@@ -74,6 +78,7 @@ class MastUtil():
                 counts[mast.tenant_name] = 1
 
         pp.pprint(counts)
+        return counts
 
 
     def print_rentals_by_lease_start(self, 
@@ -86,3 +91,4 @@ class MastUtil():
             ]
 
         for data_point in rentals: pp.pprint(data_point.__dict__)
+        return rentals
