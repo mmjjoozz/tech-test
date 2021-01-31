@@ -1,6 +1,7 @@
 # tech-test
 
 ## installation
+Python 3 required (I've used 3.8.6)
 ```
 python setup.py install
 ```
